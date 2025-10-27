@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         雨课堂作业批改助手
 // @namespace    npm/vite-plugin-monkey
-// @version      0.1.0
+// @version      0.1.1
 // @author       hotwords123
 // @description  雨课堂作业批改助手
 // @match        https://pro.yuketang.cn/subject*
+// @grant        unsafeWindow
 // ==/UserScript==
 
 (function () {
@@ -63,7 +64,8 @@ get responseText() {
       return this[RESPONSE_TEXT];
     }
   }
-  window.XMLHttpRequest = MyXMLHttpRequest;
+  var _unsafeWindow = (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
+  _unsafeWindow.XMLHttpRequest = MyXMLHttpRequest;
   const KNOWN_IMAGE_TYPES = ["jpg", "jpeg", "png", "bmp", "webp", "tiff"];
   MyXMLHttpRequest.addHandler((xhr, method, url) => {
     if (url.pathname == "/v/quiz/new_get_subj_problem_result_detail/") {
