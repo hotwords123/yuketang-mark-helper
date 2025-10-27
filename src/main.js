@@ -1,7 +1,8 @@
 import { MyXMLHttpRequest } from "./network";
+import { unsafeWindow } from "$";
 
 // Override the global XMLHttpRequest with MyXMLHttpRequest
-window.XMLHttpRequest = MyXMLHttpRequest;
+unsafeWindow.XMLHttpRequest = MyXMLHttpRequest;
 
 const KNOWN_IMAGE_TYPES = ["jpg", "jpeg", "png", "bmp", "webp", "tiff"];
 
