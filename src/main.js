@@ -4,6 +4,7 @@ import { unsafeWindow } from "$";
 // Override the global XMLHttpRequest with MyXMLHttpRequest
 unsafeWindow.XMLHttpRequest = MyXMLHttpRequest;
 
+// #region Inline submission images for easier grading
 const KNOWN_IMAGE_TYPES = ["jpg", "jpeg", "png", "bmp", "webp", "tiff"];
 
 MyXMLHttpRequest.addHandler((xhr, method, url) => {
@@ -39,8 +40,9 @@ MyXMLHttpRequest.addHandler((xhr, method, url) => {
     });
   }
 });
+// #endregion
 
-// Keyboard shortcuts for annotation actions
+// #region Keyboard shortcuts for annotation actions
 document.addEventListener("keydown", (event) => {
   const container = document.querySelector("section.annotation-image__wrap");
   const getActionButton = (name) =>
@@ -96,3 +98,46 @@ document.addEventListener("keydown", (event) => {
       break;
   }
 });
+// #endregion
+
+// #region Pen input fix for PDF viewer
+const PDF_CONTAINER_CLASS = "div.pdf-viewer-page";
+
+// Track pen interaction state
+document.addEventListener("pointerdown", (event) => {
+  const container = event.target.closest(PDF_CONTAINER_CLASS);
+  if (!container) return;
+
+  if (event.pointerType === "pen") {
+    container.dataset.penInteraction = "true";
+  }
+});
+
+const cleanupPenState = () => {
+  const containers = document.querySelectorAll(PDF_CONTAINER_CLASS);
+  for (const container of containers) {
+    delete container.dataset.penInteraction;
+  }
+};
+document.addEventListener("pointerup", cleanupPenState);
+document.addEventListener("pointercancel", cleanupPenState);
+
+document.addEventListener(
+  "touchmove",
+  (event) => {
+    const container = event.target.closest(PDF_CONTAINER_CLASS);
+    if (!container) return;
+
+    if (container.dataset.penInteraction === "true") {
+      const activeButton = container.querySelector(
+        "div.toolbar button.active[data-tooltype]"
+      );
+      if (activeButton?.dataset.tooltype === "draw") {
+        // Prevent scrolling when drawing with pen
+        event.preventDefault();
+      }
+    }
+  },
+  { passive: false }
+);
+// #endregion
