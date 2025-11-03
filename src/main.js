@@ -47,6 +47,13 @@ const IMAGE_CONTAINER_CLASS = "section.annotation-image__wrap";
 const PDF_CONTAINER_CLASS = "div.pdf-viewer-page";
 
 document.addEventListener("keydown", (event) => {
+  // Ignore key events from input fields or content editable elements
+  if (
+    ["INPUT", "TEXTAREA"].includes(event.target.tagName) ||
+    event.target.isContentEditable
+  )
+    return;
+
   const imageContainer = document.querySelector(IMAGE_CONTAINER_CLASS);
   const getImageActionButton = (name) =>
     imageContainer?.querySelector(
@@ -57,7 +64,7 @@ document.addEventListener("keydown", (event) => {
       `section.pen__line.box-center > p.action-btn.box-center:nth-child(${index})`
     );
 
-  const pdfContainer = event.target.closest(PDF_CONTAINER_CLASS);
+  const pdfContainer = document.querySelector(PDF_CONTAINER_CLASS);
   const getPdfActionButton = (name) =>
     pdfContainer?.querySelector(`div.toolbar button[data-tooltype="${name}"]`);
 
