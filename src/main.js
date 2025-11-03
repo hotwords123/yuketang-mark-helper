@@ -39,3 +39,60 @@ MyXMLHttpRequest.addHandler((xhr, method, url) => {
     });
   }
 });
+
+// Keyboard shortcuts for annotation actions
+document.addEventListener("keydown", (event) => {
+  const container = document.querySelector("section.annotation-image__wrap");
+  const getActionButton = (name) =>
+    container?.querySelector(
+      `p.action-tip.action-btn.box-center[data-tip="${name}"]`
+    );
+  const getPenWidthButton = (index) =>
+    container?.querySelector(
+      `section.pen__line.box-center > p.action-btn.box-center:nth-child(${index})`
+    );
+
+  switch (event.key) {
+    case "1":
+      getActionButton("移动")?.click();
+      break;
+
+    case "2":
+      getActionButton("圈画")?.click();
+      break;
+
+    case "3":
+      getActionButton("文字")?.click();
+      break;
+
+    case "Q":
+    case "q":
+      getPenWidthButton(1)?.click();
+      break;
+
+    case "W":
+    case "w":
+      getPenWidthButton(2)?.click();
+      break;
+
+    case "E":
+    case "e":
+      getPenWidthButton(3)?.click();
+      break;
+
+    case "Z":
+    case "z":
+      if (event.ctrlKey || event.metaKey) {
+        getActionButton("撤回")?.click();
+      }
+      break;
+
+    case "Escape":
+      getActionButton("取消")?.click();
+      break;
+
+    case "Enter":
+      getActionButton("保存")?.click();
+      break;
+  }
+});
