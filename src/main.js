@@ -43,66 +43,82 @@ MyXMLHttpRequest.addHandler((xhr, method, url) => {
 // #endregion
 
 // #region Keyboard shortcuts for annotation actions
+const IMAGE_CONTAINER_CLASS = "section.annotation-image__wrap";
+const PDF_CONTAINER_CLASS = "div.pdf-viewer-page";
+
 document.addEventListener("keydown", (event) => {
-  const container = document.querySelector("section.annotation-image__wrap");
-  const getActionButton = (name) =>
-    container?.querySelector(
+  const imageContainer = document.querySelector(IMAGE_CONTAINER_CLASS);
+  const getImageActionButton = (name) =>
+    imageContainer?.querySelector(
       `p.action-tip.action-btn.box-center[data-tip="${name}"]`
     );
-  const getPenWidthButton = (index) =>
-    container?.querySelector(
+  const getImagePenWidthButton = (index) =>
+    imageContainer?.querySelector(
       `section.pen__line.box-center > p.action-btn.box-center:nth-child(${index})`
     );
 
+  const pdfContainer = event.target.closest(PDF_CONTAINER_CLASS);
+  const getPdfActionButton = (name) =>
+    pdfContainer?.querySelector(`div.toolbar button[data-tooltype="${name}"]`);
+
   switch (event.key) {
     case "1":
-      getActionButton("移动")?.click();
+      getImageActionButton("移动")?.click();
+      getPdfActionButton("highlight")?.click();
       break;
 
     case "2":
-      getActionButton("圈画")?.click();
+      getImageActionButton("圈画")?.click();
+      getPdfActionButton("draw")?.click();
       break;
 
     case "3":
-      getActionButton("文字")?.click();
+      getImageActionButton("文字")?.click();
+      getPdfActionButton("text")?.click();
       break;
 
     case "Q":
     case "q":
-      getPenWidthButton(1)?.click();
+      getImagePenWidthButton(1)?.click();
       break;
 
     case "W":
     case "w":
-      getPenWidthButton(2)?.click();
+      getImagePenWidthButton(2)?.click();
       break;
 
     case "E":
     case "e":
-      getPenWidthButton(3)?.click();
+      getImagePenWidthButton(3)?.click();
       break;
 
     case "Z":
     case "z":
       if (event.ctrlKey || event.metaKey) {
-        getActionButton("撤回")?.click();
+        getImageActionButton("撤回")?.click();
+        getPdfActionButton("undo")?.click();
+      }
+      break;
+
+    case "Y":
+    case "y":
+      if (event.ctrlKey || event.metaKey) {
+        getPdfActionButton("redo")?.click();
       }
       break;
 
     case "Escape":
-      getActionButton("取消")?.click();
+      getImageActionButton("取消")?.click();
       break;
 
     case "Enter":
-      getActionButton("保存")?.click();
+      getImageActionButton("保存")?.click();
       break;
   }
 });
 // #endregion
 
 // #region Pen input fix for PDF viewer
-const PDF_CONTAINER_CLASS = "div.pdf-viewer-page";
-
 // Track pen interaction state
 document.addEventListener("pointerdown", (event) => {
   const container = event.target.closest(PDF_CONTAINER_CLASS);
